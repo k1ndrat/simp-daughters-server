@@ -4,6 +4,7 @@ import { EpisodeModel } from './episode.model';
 import { ModelType } from '@typegoose/typegoose/lib/types';
 import { Types } from 'mongoose';
 import { EpisodeStateModel } from './episode-state.model';
+import { StateDto } from './dto/state.dto';
 
 @Injectable()
 export class EpisodeService {
@@ -109,5 +110,30 @@ export class EpisodeService {
         isForLater: type === 'forLater',
       },
     });
+  }
+
+  async setNewState(
+    state: StateDto,
+    userId: Types.ObjectId,
+    episodeId: Types.ObjectId,
+  ) {
+    const episodeState = await this.episodeStateModel.findOne({
+      userId,
+      episodeId,
+    });
+
+    if (!episodeState) {
+      return await this.episodeStateModel.create({
+        userId,
+        episodeId,
+        state,
+      });
+    }
+
+    return await this.episodeStateModel.findOneAndUpdate(
+      { userId, episodeId },
+      { state: state },
+      { new: true },
+    );
   }
 }

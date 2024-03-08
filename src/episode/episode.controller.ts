@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -12,6 +13,7 @@ import { EpisodeService } from './episode.service';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { Types } from 'mongoose';
 import { IdValidationPipe } from 'src/pipes/id.validation.pipe';
+import { StateDto } from './dto/state.dto';
 
 @Controller('episode')
 export class EpisodeController {
@@ -62,6 +64,21 @@ export class EpisodeController {
       req.user.sub.id,
       episodeId,
       'forLater',
+    );
+  }
+
+  @Post('state/:episodeId')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtGuard)
+  async setNewState(
+    @Request() req,
+    @Param('episodeId', IdValidationPipe) episodeId: Types.ObjectId,
+    @Body() state: StateDto,
+  ) {
+    return await this.episodeService.setNewState(
+      state,
+      req.user.sub.id,
+      episodeId,
     );
   }
 }

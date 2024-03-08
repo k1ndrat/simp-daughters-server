@@ -7,13 +7,13 @@ import { UserModel } from 'src/user/user.model';
 export interface EpisodeStateModel extends Base {}
 
 class State {
-  @prop({ default: false })
+  @prop({})
   isLiked: boolean;
 
-  @prop({ default: false })
+  @prop({})
   isWatched: boolean;
 
-  @prop({ default: false })
+  @prop({})
   isForLater: boolean;
 }
 
