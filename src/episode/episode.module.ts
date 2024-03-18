@@ -1,26 +1,16 @@
 import { Module } from '@nestjs/common';
 import { EpisodeController } from './episode.controller';
 import { EpisodeService } from './episode.service';
-import { EpisodeModel } from './episode.model';
-import { TypegooseModule } from 'nestjs-typegoose';
 import { JwtService } from '@nestjs/jwt';
-import { EpisodeStateModel } from './episode-state.model';
+import { Episode, EpisodeSchema } from './episode.model';
+import { EpisodeState, EpisodeStateSchema } from './episode-state.model';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
-    TypegooseModule.forFeature([
-      {
-        typegooseClass: EpisodeModel,
-        schemaOptions: {
-          collection: 'episodes',
-        },
-      },
-      {
-        typegooseClass: EpisodeStateModel,
-        schemaOptions: {
-          collection: 'EpisodeStates',
-        },
-      },
+    MongooseModule.forFeature([
+      { name: Episode.name, schema: EpisodeSchema },
+      { name: EpisodeState.name, schema: EpisodeStateSchema },
     ]),
   ],
   controllers: [EpisodeController],

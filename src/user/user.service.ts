@@ -1,16 +1,15 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { InjectModel } from 'nestjs-typegoose';
-import { ModelType } from '@typegoose/typegoose/lib/types';
-import { UserModel } from './user.model';
-import { Types } from 'mongoose';
+import { User, UserDocument } from './user.model';
+import { Model, Types } from 'mongoose';
 import { CreateUserDto } from './dto/user.dto';
 import { hash } from 'bcrypt';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(UserModel)
-    private readonly userModel: ModelType<UserModel>,
+    @InjectModel(User.name)
+    private readonly userModel: Model<UserDocument>,
   ) {}
 
   async createUser(dto: CreateUserDto) {

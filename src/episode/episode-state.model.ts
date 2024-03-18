@@ -1,29 +1,31 @@
-import { prop } from '@typegoose/typegoose';
-import { TimeStamps, Base } from '@typegoose/typegoose/lib/defaultClasses';
-import { Types } from 'mongoose';
-import { EpisodeModel } from './episode.model';
-import { UserModel } from 'src/user/user.model';
-
-export interface EpisodeStateModel extends Base {}
+import { Episode } from './episode.model';
+import { User } from 'src/user/user.model';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
 
 class State {
-  @prop({})
+  @Prop({})
   isLiked: boolean;
 
-  @prop({})
+  @Prop({})
   isWatched: boolean;
 
-  @prop({})
+  @Prop({})
   isForLater: boolean;
 }
 
-export class EpisodeStateModel extends TimeStamps {
-  @prop({ ref: () => EpisodeModel })
+export type EpisodeStateDocument = EpisodeState & Document;
+
+@Schema({ collection: 'EpisodeStates', timestamps: true })
+export class EpisodeState {
+  @Prop({ ref: () => Episode })
   episodeId: Types.ObjectId;
 
-  @prop({ ref: () => UserModel })
+  @Prop({ ref: () => User })
   userId: Types.ObjectId;
 
-  @prop({ _id: false, default: {} })
+  @Prop({ _id: false, default: {} })
   state: State;
 }
+
+export const EpisodeStateSchema = SchemaFactory.createForClass(EpisodeState);

@@ -1,21 +1,14 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { TypegooseModule } from 'nestjs-typegoose';
-import { UserModel } from 'src/user/user.model';
+import { User, UserSchema } from 'src/user/user.model';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
-    TypegooseModule.forFeature([
-      {
-        typegooseClass: UserModel,
-        schemaOptions: {
-          collection: 'User',
-        },
-      },
-    ]),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   controllers: [AuthController],
   providers: [AuthService, UserService, JwtService],

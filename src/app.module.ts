@@ -4,18 +4,13 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypegooseModule } from 'nestjs-typegoose';
-import { getMongoConfig } from './mongo.config';
 import { EpisodeModule } from './episode/episode.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypegooseModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: getMongoConfig,
-    }),
+    MongooseModule.forRoot(process.env.MONGO_URI),
     AuthModule,
     UserModule,
     EpisodeModule,

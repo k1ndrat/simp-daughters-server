@@ -1,18 +1,21 @@
-import { prop } from '@typegoose/typegoose';
-import { TimeStamps, Base } from '@typegoose/typegoose/lib/defaultClasses';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-export interface EpisodeModel extends Base {}
+export type EpisodeDocument = Episode & Document;
 
-export class EpisodeModel extends TimeStamps {
-  @prop({})
+@Schema({ collection: 'episodes', timestamps: true })
+export class Episode {
+  @Prop({})
   episode: number;
 
-  @prop()
+  @Prop()
   season: number;
 
-  @prop({})
+  @Prop({})
   title: string;
 
-  @prop({})
+  @Prop({})
   link: string;
 }
+
+export const EpisodeSchema = SchemaFactory.createForClass(Episode);

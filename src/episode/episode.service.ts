@@ -1,18 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from 'nestjs-typegoose';
-import { EpisodeModel } from './episode.model';
-import { ModelType } from '@typegoose/typegoose/lib/types';
-import { Types } from 'mongoose';
-import { EpisodeStateModel } from './episode-state.model';
+import { Episode, EpisodeDocument } from './episode.model';
+import { Types, Model } from 'mongoose';
+import { EpisodeState, EpisodeStateDocument } from './episode-state.model';
 import { StateDto } from './dto/state.dto';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class EpisodeService {
   constructor(
-    @InjectModel(EpisodeModel)
-    private readonly episodeModel: ModelType<EpisodeModel>,
-    @InjectModel(EpisodeStateModel)
-    private readonly episodeStateModel: ModelType<EpisodeStateModel>,
+    @InjectModel(Episode.name)
+    private readonly episodeModel: Model<EpisodeDocument>,
+    @InjectModel(EpisodeState.name)
+    private readonly episodeStateModel: Model<EpisodeStateDocument>,
   ) {}
 
   async getAllEpisodes() {
@@ -117,21 +116,23 @@ export class EpisodeService {
     userId: Types.ObjectId,
     episodeId: Types.ObjectId,
   ) {
+    const userIdForDb = new Types.ObjectId(userId);
+    const episodeIdForDb = new Types.ObjectId(episodeId);
     const episodeState = await this.episodeStateModel.findOne({
-      userId,
-      episodeId,
+      userId: userIdForDb,
+      episodeId: episodeIdForDb,
     });
 
     if (!episodeState) {
       return await this.episodeStateModel.create({
-        userId,
-        episodeId,
+        userId: userIdForDb,
+        episodeId: episodeIdForDb,
         state,
       });
     }
 
     return await this.episodeStateModel.findOneAndUpdate(
-      { userId, episodeId },
+      { userId: userIdForDb, episodeId: episodeIdForDb },
       { state: state },
       { new: true },
     );
