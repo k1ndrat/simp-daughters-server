@@ -16,7 +16,7 @@ export class UserService {
     const user = await this.userModel.findOne({ email: dto.email }).lean();
 
     if (user) {
-      throw new ConflictException('email duplicated');
+      throw new ConflictException('An account with this email already exists');
     }
 
     const newUser: any = await this.userModel.create({
