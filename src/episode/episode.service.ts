@@ -64,6 +64,60 @@ export class EpisodeService {
     return result;
   }
 
+  async getEpisodesWithSpecialState(
+    userId: Types.ObjectId,
+    state: 'isLiked' | 'isForLater',
+  ) {
+    const convertedUserId = new Types.ObjectId(userId);
+    const episodes = await this.episodeModel.aggregate([
+      {
+        $lookup: {
+          from: 'EpisodeStates',
+          localField: '_id',
+          foreignField: 'episodeId',
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: ['$userId', convertedUserId] },
+              },
+            },
+          ],
+          as: 'episodeState',
+        },
+      },
+      {
+        $addFields: {
+          state: { $arrayElemAt: ['$episodeState.state', 0] },
+        },
+      },
+      {
+        $project: {
+          season: 1,
+          episode: 1,
+          title: 1,
+          link: 1,
+          state: 1,
+        },
+      },
+      {
+        $match: {
+          [`state.${state}`]: true,
+        },
+      },
+    ]);
+
+    const result = {};
+    episodes.forEach((episode) => {
+      if (!result[episode.season]) {
+        result[episode.season] = [];
+      }
+      result[episode.season].push(episode);
+      result[episode.season].sort((a, b) => a.episode - b.episode);
+    });
+
+    return result;
+  }
+
   async toggleStateEpisode(
     userId: Types.ObjectId,
     episodeId: Types.ObjectId,

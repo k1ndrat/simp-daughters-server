@@ -15,19 +15,34 @@ import { Types } from 'mongoose';
 import { IdValidationPipe } from 'src/pipes/id.validation.pipe';
 import { StateDto } from './dto/state.dto';
 
+@UseGuards(JwtGuard)
 @Controller('episode')
 export class EpisodeController {
   constructor(private readonly episodeService: EpisodeService) {}
 
   @Get()
-  @UseGuards(JwtGuard)
   async findAllEpisodes(@Request() req) {
     return await this.episodeService.getEpisodesWithStates(req.user.sub.id);
   }
 
+  @Get('/liked')
+  async findLikedEpisodes(@Request() req) {
+    return await this.episodeService.getEpisodesWithSpecialState(
+      req.user.sub.id,
+      'isLiked',
+    );
+  }
+
+  @Get('/onlater')
+  async findWatchedEpisodes(@Request() req) {
+    return await this.episodeService.getEpisodesWithSpecialState(
+      req.user.sub.id,
+      'isForLater',
+    );
+  }
+
   @Post('like/:episodeId')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtGuard)
   async likeEpisode(
     @Request() req,
     @Param('episodeId', IdValidationPipe) episodeId: Types.ObjectId,
@@ -41,7 +56,6 @@ export class EpisodeController {
 
   @Post('watch/:episodeId')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtGuard)
   async watchEpisode(
     @Request() req,
     @Param('episodeId', IdValidationPipe) episodeId: Types.ObjectId,
@@ -55,7 +69,6 @@ export class EpisodeController {
 
   @Post('forLater/:episodeId')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtGuard)
   async forLaterEpisode(
     @Request() req,
     @Param('episodeId', IdValidationPipe) episodeId: Types.ObjectId,
@@ -69,7 +82,6 @@ export class EpisodeController {
 
   @Post('state/:episodeId')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtGuard)
   async setNewState(
     @Request() req,
     @Param('episodeId', IdValidationPipe) episodeId: Types.ObjectId,
