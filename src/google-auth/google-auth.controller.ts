@@ -13,15 +13,17 @@ export class GoogleAuthController {
   @Get('redirect')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req, @Res() res) {
-    const tokens = await this.googleAuthService.googleLogin(req);
+    const tokens: any = await this.googleAuthService.googleLogin(req);
 
-    res.cookie('tokens', JSON.stringify(tokens), {
-      sameSite: 'none',
-      secure: true,
-      // httpOnly: false,
-      // path: '/',
-    });
+    // res.cookie('tokens', JSON.stringify(tokens), {
+    //   sameSite: 'none',
+    //   secure: true,
+    //   // httpOnly: false,
+    //   // path: '/',
+    // });
 
-    res.redirect(process.env.CLIENT_BASE_URL);
+    res.redirect(
+      `${process.env.CLIENT_BASE_URL}?refreshToken=${tokens.refreshToken}`,
+    );
   }
 }

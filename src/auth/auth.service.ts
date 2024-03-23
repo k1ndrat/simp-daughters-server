@@ -53,7 +53,10 @@ export class AuthService {
       sub: user.sub,
     };
 
+    const { password, ...userinfo } = user;
+
     return {
+      user: userinfo,
       accessToken: await this.jwtService.signAsync(payload, {
         expiresIn: '70d',
         secret: process.env.ACCESS_TOKEN_SECRET,
