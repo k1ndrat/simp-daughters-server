@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EpisodeModule } from './episode/episode.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { GoogleAuthModule } from './google-auth/google-auth.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { MongooseModule } from '@nestjs/mongoose';
     AuthModule,
     UserModule,
     EpisodeModule,
+    GoogleAuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
