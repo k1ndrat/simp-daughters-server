@@ -18,8 +18,8 @@ export class GoogleAuthController {
     res.cookie('tokens', JSON.stringify(tokens), {
       sameSite: 'none',
       secure: true,
-      httpOnly: false,
-      path: '/',
+      // httpOnly: false,
+      // path: '/',
     });
 
     res.redirect(process.env.CLIENT_BASE_URL);
