@@ -14,13 +14,7 @@ export class GoogleAuthService {
       return 'No user from google';
     }
 
-    // console.log({
-    //   message: 'User information from google',
-    //   user: req.user,
-    // });
-
     let user = await this.userService.findByEmail(req.user.email);
-    console.log('STEP 1:', user);
 
     if (!user) {
       user = await this.userService.createUser({
@@ -28,9 +22,7 @@ export class GoogleAuthService {
         email: req.user.email,
         password: 'GooglePassword',
       });
-      console.log('STEP 2:', user);
     }
-    console.log('STEP 2:', user);
 
     return await this.authService.generateTokens(user);
   }

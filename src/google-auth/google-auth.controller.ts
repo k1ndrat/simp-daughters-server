@@ -12,18 +12,12 @@ export class GoogleAuthController {
 
   @Get('redirect')
   @UseGuards(AuthGuard('google'))
-  async googleAuthRedirect(@Req() req, @Res() res, @Headers() headers) {
+  async googleAuthRedirect(@Req() req, @Res() res) {
     const tokens = await this.googleAuthService.googleLogin(req);
 
-    // console.log(tokens);
-
-    console.log(headers.host);
-
     res.cookie('tokens', JSON.stringify(tokens), {
-      domain: headers.host.split(':')[0],
+      domain: process.env.CLIENT_DOMAIN,
     });
-
-    // console.log(res);
 
     res.redirect(process.env.CLIENT_BASE_URL);
   }
