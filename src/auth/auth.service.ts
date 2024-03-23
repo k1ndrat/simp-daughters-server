@@ -47,27 +47,27 @@ export class AuthService {
     throw new UnauthorizedException('Wrong login or password');
   }
 
-  async refreshToken(user: any) {
-    const payload = {
-      username: user.username,
-      sub: user.sub,
-    };
+  // async refreshToken(user: any) {
+  //   const payload = {
+  //     username: user.username,
+  //     sub: user.sub,
+  //   };
 
-    const { password, ...userinfo } = user;
+  //   const { password, ...userinfo } = user;
 
-    return {
-      user: userinfo,
-      accessToken: await this.jwtService.signAsync(payload, {
-        expiresIn: '70d',
-        secret: process.env.ACCESS_TOKEN_SECRET,
-      }),
-      refreshToken: await this.jwtService.signAsync(payload, {
-        expiresIn: '70d',
-        secret: process.env.REFRESH_TOKEN_SECRET,
-      }),
-      // expiresIn: new Date().setTime(new Date().getTime() + EXPIRE_TIME),
-    };
-  }
+  //   return {
+  //     user: userinfo,
+  //     accessToken: await this.jwtService.signAsync(payload, {
+  //       expiresIn: '70d',
+  //       secret: process.env.ACCESS_TOKEN_SECRET,
+  //     }),
+  //     refreshToken: await this.jwtService.signAsync(payload, {
+  //       expiresIn: '7d',
+  //       secret: process.env.REFRESH_TOKEN_SECRET,
+  //     }),
+  //     // expiresIn: new Date().setTime(new Date().getTime() + EXPIRE_TIME),
+  //   };
+  // }
 
   async generateTokens(user: any) {
     const payload = {
@@ -83,11 +83,11 @@ export class AuthService {
     return {
       user: userinfo,
       accessToken: await this.jwtService.signAsync(payload, {
-        expiresIn: '70d',
+        expiresIn: '5m',
         secret: process.env.ACCESS_TOKEN_SECRET,
       }),
       refreshToken: await this.jwtService.signAsync(payload, {
-        expiresIn: '70d',
+        expiresIn: '7d',
         secret: process.env.REFRESH_TOKEN_SECRET,
       }),
     };

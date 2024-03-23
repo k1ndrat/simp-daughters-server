@@ -34,6 +34,8 @@ export class AuthController {
   @UseGuards(RefreshJwtGuard)
   @Post('refresh')
   async refreshToken(@Request() req) {
-    return await this.authService.refreshToken(req.user);
+    const user = await this.userService.findByEmail(req.user.username);
+
+    return await this.authService.generateTokens(user);
   }
 }

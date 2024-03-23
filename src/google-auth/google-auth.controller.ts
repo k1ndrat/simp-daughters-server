@@ -15,15 +15,8 @@ export class GoogleAuthController {
   async googleAuthRedirect(@Req() req, @Res() res) {
     const tokens: any = await this.googleAuthService.googleLogin(req);
 
-    // res.cookie('tokens', JSON.stringify(tokens), {
-    //   sameSite: 'none',
-    //   secure: true,
-    //   // httpOnly: false,
-    //   // path: '/',
-    // });
-
     res.redirect(
-      `${process.env.CLIENT_BASE_URL}?refreshToken=${tokens.refreshToken}`,
+      `${process.env.CLIENT_BASE_URL}?tokens=${JSON.stringify(tokens)}`,
     );
   }
 }

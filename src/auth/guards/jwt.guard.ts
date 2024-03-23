@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -27,7 +28,8 @@ export class JwtGuard implements CanActivate {
       });
       request.user = payload;
     } catch {
-      throw new UnauthorizedException();
+      // throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
 
     return true;
