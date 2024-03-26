@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EpisodeModule } from './episode/episode.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { GoogleAuthModule } from './google-auth/google-auth.module';
+import { FacebookAuthModule } from './facebook-auth/facebook-auth.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { GoogleAuthModule } from './google-auth/google-auth.module';
     UserModule,
     EpisodeModule,
     GoogleAuthModule,
+    FacebookAuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
