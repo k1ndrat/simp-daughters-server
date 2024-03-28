@@ -35,4 +35,16 @@ export class UserService {
   async findByEmail(email: string) {
     return await this.userModel.findOne({ email: email }).lean();
   }
+
+  async updateUser(id, dto) {
+    return await this.userModel
+      .findByIdAndUpdate(
+        id,
+        {
+          ...dto,
+        },
+        { new: true },
+      )
+      .lean();
+  }
 }

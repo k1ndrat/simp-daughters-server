@@ -20,7 +20,17 @@ export class GoogleAuthService {
       user = await this.userService.createUser({
         name: req.user.firstName + ' ' + req.user.lastName,
         email: req.user.email,
+        picture: req.user.picture,
         password: 'GooglePassword',
+      });
+    }
+
+    if (!user?.picture) {
+      console.log('no picture');
+      console.log(user._id);
+
+      user = await this.userService.updateUser(user._id, {
+        picture: req.user.picture,
       });
     }
 
