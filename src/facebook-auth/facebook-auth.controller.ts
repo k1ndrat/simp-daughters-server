@@ -8,7 +8,9 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FacebookAuthService } from './facebook-auth.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('FacebookAuth')
 @Controller('facebook')
 export class FacebookAuthController {
   constructor(private readonly facebookAuthService: FacebookAuthService) {}
