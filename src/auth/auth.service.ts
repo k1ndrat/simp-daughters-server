@@ -3,6 +3,10 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import { LoginDto } from './dto/login.dto';
 import { compare } from 'bcrypt';
+import { Response } from 'express';
+
+// const EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000;
+const EXPIRE_TIME = 5 * 60 * 1000; // access token expiring time
 
 @Injectable()
 export class AuthService {
@@ -11,33 +15,17 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(dto: LoginDto) {
+  async login(dto: LoginDto, res: Response) {
     const user = await this.validateUser(dto);
-    // const payload = {
-    //   username: user.email,
-    //   sub: {
-    //     id: user._id,
-    //     name: user.name,
-    //   },
-    // };
 
-    // return {
-    //   user,
-    //   accessToken: await this.jwtService.signAsync(payload, {
-    //     expiresIn: '70d',
-    //     secret: process.env.ACCESS_TOKEN_SECRET,
-    //   }),
-    //   refreshToken: await this.jwtService.signAsync(payload, {
-    //     expiresIn: '70d',
-    //     secret: process.env.REFRESH_TOKEN_SECRET,
-    //   }),
-    // };
-
-    return await this.generateTokens(user);
+    return await this.generateTokens(user, res);
   }
 
   async validateUser(dto: LoginDto) {
     const user = await this.userService.findByEmail(dto.email);
+
+    if (user?.authStrategy === 'google')
+      throw new UnauthorizedException('This account is registered with google');
 
     if (user && (await compare(dto.password, user.password))) {
       const { password, ...res } = user;
@@ -47,29 +35,7 @@ export class AuthService {
     throw new UnauthorizedException('Wrong login or password');
   }
 
-  // async refreshToken(user: any) {
-  //   const payload = {
-  //     username: user.username,
-  //     sub: user.sub,
-  //   };
-
-  //   const { password, ...userinfo } = user;
-
-  //   return {
-  //     user: userinfo,
-  //     accessToken: await this.jwtService.signAsync(payload, {
-  //       expiresIn: '70d',
-  //       secret: process.env.ACCESS_TOKEN_SECRET,
-  //     }),
-  //     refreshToken: await this.jwtService.signAsync(payload, {
-  //       expiresIn: '7d',
-  //       secret: process.env.REFRESH_TOKEN_SECRET,
-  //     }),
-  //     // expiresIn: new Date().setTime(new Date().getTime() + EXPIRE_TIME),
-  //   };
-  // }
-
-  async generateTokens(user: any) {
+  async generateTokens(user: any, res: Response) {
     const payload = {
       username: user.email,
       sub: {
@@ -80,7 +46,7 @@ export class AuthService {
 
     const { password, ...userinfo } = user;
 
-    return {
+    const tokens = {
       user: userinfo,
       accessToken: await this.jwtService.signAsync(payload, {
         expiresIn: '5m',
@@ -90,6 +56,14 @@ export class AuthService {
         expiresIn: '7d',
         secret: process.env.REFRESH_TOKEN_SECRET,
       }),
+      expiresIn: new Date().setTime(new Date().getTime() + EXPIRE_TIME),
     };
+
+    res.cookie('jwt', tokens.refreshToken, {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    });
+
+    return tokens;
   }
 }

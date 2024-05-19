@@ -4,7 +4,8 @@ import {
   HttpCode,
   Post,
   UseGuards,
-  Request,
+  Res,
+  Req,
 } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
@@ -21,6 +22,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { Request, Response } from 'express';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -83,8 +85,11 @@ export class AuthController {
   @ApiBadRequestResponse({ description: 'Please write right body as dto' })
   @HttpCode(200)
   @Post('login')
-  async login(@Body() dto: LoginDto) {
-    return await this.authService.login(dto);
+  async login(
+    @Body() dto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return await this.authService.login(dto, res);
   }
 
   @ApiOperation({
@@ -115,9 +120,9 @@ export class AuthController {
   @ApiBearerAuth()
   @UseGuards(RefreshJwtGuard)
   @Post('refresh')
-  async refreshToken(@Request() req) {
+  async refreshToken(@Req() req, @Res({ passthrough: true }) res: Response) {
     const user = await this.userService.findByEmail(req.user.username);
 
-    return await this.authService.generateTokens(user);
+    return await this.authService.generateTokens(user, res);
   }
 }

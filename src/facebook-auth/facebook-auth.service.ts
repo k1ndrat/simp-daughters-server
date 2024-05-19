@@ -24,6 +24,6 @@ export class FacebookAuthService {
       });
     }
 
-    return await this.authService.generateTokens(user);
+    // return await this.authService.generateTokens(user);
   }
 }

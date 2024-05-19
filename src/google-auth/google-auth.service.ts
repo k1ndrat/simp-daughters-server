@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { UserService } from 'src/user/user.service';
+import { Response } from 'express';
 
 @Injectable()
 export class GoogleAuthService {
@@ -9,7 +10,7 @@ export class GoogleAuthService {
     private readonly authService: AuthService,
   ) {}
 
-  async googleLogin(req) {
+  async googleLogin(req, res: Response) {
     if (!req.user) {
       return 'No user from google';
     }
@@ -21,7 +22,9 @@ export class GoogleAuthService {
         name: req.user.firstName + ' ' + req.user.lastName,
         email: req.user.email,
         picture: req.user.picture,
-        password: 'GooglePassword',
+        // password: 'GooglePassword',
+        password: '',
+        authStrategy: 'google',
       });
     }
 
@@ -34,6 +37,6 @@ export class GoogleAuthService {
       });
     }
 
-    return await this.authService.generateTokens(user);
+    return await this.authService.generateTokens(user, res);
   }
 }

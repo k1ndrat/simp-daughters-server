@@ -19,4 +19,9 @@ export class CreateUserDto {
   @IsUrl()
   @ApiProperty({ required: false })
   picture?: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ required: false })
+  authStrategy?: string;
 }

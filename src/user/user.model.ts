@@ -16,6 +16,9 @@ export class User {
 
   @Prop()
   picture: string;
+
+  @Prop()
+  authStrategy: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
