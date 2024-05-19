@@ -49,7 +49,7 @@ export class AuthService {
     const tokens = {
       user: userinfo,
       accessToken: await this.jwtService.signAsync(payload, {
-        expiresIn: '5m',
+        expiresIn: '15s',
         secret: process.env.ACCESS_TOKEN_SECRET,
       }),
       refreshToken: await this.jwtService.signAsync(payload, {
@@ -63,6 +63,8 @@ export class AuthService {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
       domain: process.env.CLIENT_DOMAIN,
+      sameSite: 'none',
+      secure: true,
     });
 
     return tokens;
