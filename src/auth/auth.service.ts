@@ -62,8 +62,9 @@ export class AuthService {
     res.cookie('jwt', tokens.refreshToken, {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      sameSite: 'none',
-      secure: true,
+      domain: process.env.CLIENT_DOMAIN as string,
+      // sameSite: 'none',
+      // secure: true,
     });
 
     return tokens;
