@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Types } from 'mongoose';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
@@ -9,12 +9,19 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { RefreshJwtGuard } from 'src/auth/guards/refresh.guard';
 
 @ApiTags('User')
 @ApiBearerAuth()
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @UseGuards(RefreshJwtGuard)
+  @Get('/me')
+  async getAuthUser(@Req() req) {
+    return await this.userService.findByEmail(req.user.username);
+  }
 
   @ApiOperation({
     summary: 'Get user',

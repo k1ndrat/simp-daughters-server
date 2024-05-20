@@ -125,4 +125,9 @@ export class AuthController {
 
     return await this.authService.generateTokens(user, res);
   }
+
+  @Post('logout')
+  async logout(@Res({ passthrough: true }) res) {
+    res.clearCookie('jwt');
+  }
 }

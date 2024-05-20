@@ -43,13 +43,13 @@ export class AuthService {
         name: user.name,
       },
     };
-
+    //
     const { password, ...userinfo } = user;
 
     const tokens = {
       user: userinfo,
       accessToken: await this.jwtService.signAsync(payload, {
-        expiresIn: '15s',
+        expiresIn: '5m',
         secret: process.env.ACCESS_TOKEN_SECRET,
       }),
       refreshToken: await this.jwtService.signAsync(payload, {
