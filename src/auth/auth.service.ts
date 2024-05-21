@@ -63,8 +63,8 @@ export class AuthService {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
       // domain: process.env.CLIENT_DOMAIN as string,
-      sameSite: 'strict',
-      // secure: true,
+      sameSite: 'none',
+      secure: true,
     });
 
     return tokens;
