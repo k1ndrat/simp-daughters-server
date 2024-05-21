@@ -63,7 +63,7 @@ export class AuthService {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
       // domain: process.env.CLIENT_DOMAIN as string,
-      sameSite: 'none',
+      sameSite: 'strict',
       secure: true,
     });
 
