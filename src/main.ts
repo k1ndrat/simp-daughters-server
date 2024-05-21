@@ -16,7 +16,7 @@ async function bootstrap() {
     }),
   );
 
-  app.use(cookieParser(process.env.COOKIE_SECRET as string));
+  app.use(cookieParser());
 
   const config = new DocumentBuilder()
     .setTitle('SimpDaughters API')
