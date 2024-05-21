@@ -64,7 +64,7 @@ export class AuthService {
       httpOnly: true,
       // signed: true,
       // domain: process.env.CLIENT_DOMAIN as string,
-      // sameSite: 'none',
+      sameSite: 'none',
       secure: true,
     });
 
