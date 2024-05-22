@@ -15,8 +15,7 @@ export class RefreshJwtGuard implements CanActivate {
 
     let token: string;
     try {
-      // token = request.headers.authorization.split(' ')[1];
-      token = request.cookies['jwt'];
+      token = request.headers.authorization.split(' ')[1];
     } catch {
       throw new UnauthorizedException();
     }
@@ -27,7 +26,6 @@ export class RefreshJwtGuard implements CanActivate {
       });
 
       request.user = payload;
-      console.log(payload);
     } catch {
       throw new UnauthorizedException();
     }

@@ -43,7 +43,7 @@ export class AuthService {
         name: user.name,
       },
     };
-    //
+
     const { password, ...userinfo } = user;
 
     const tokens = {
@@ -58,13 +58,6 @@ export class AuthService {
       }),
       expiresIn: new Date().setTime(new Date().getTime() + EXPIRE_TIME),
     };
-
-    // res.cookie('jwt', tokens.refreshToken, {
-    //   maxAge: 7 * 24 * 60 * 60 * 1000,
-    //   // httpOnly: true,
-    //   sameSite: 'none',
-    //   secure: true,
-    // });
 
     return tokens;
   }

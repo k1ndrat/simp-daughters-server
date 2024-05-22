@@ -29,9 +29,6 @@ export class GoogleAuthService {
     }
 
     if (!user?.picture) {
-      console.log('no picture');
-      console.log(user._id);
-
       user = await this.userService.updateUser(user._id, {
         picture: req.user.picture,
       });

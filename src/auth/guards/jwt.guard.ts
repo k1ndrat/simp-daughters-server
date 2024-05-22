@@ -14,7 +14,6 @@ export class JwtGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
 
-    // console.log(request.headers.authorization);
     let token;
     try {
       token = request.headers.authorization.split(' ')[1];
@@ -28,9 +27,6 @@ export class JwtGuard implements CanActivate {
       });
       request.user = payload;
     } catch {
-      // throw new UnauthorizedException();
-      console.log('loh');
-
       throw new ForbiddenException();
     }
 
